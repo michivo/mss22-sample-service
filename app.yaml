@@ -1,0 +1,6 @@
+# This file defines the runtime settings for Google's App Engine Standard 
+
+runtime: nodejs14
+instance_class: F1
+automatic_scaling:
+  max_instances: 1

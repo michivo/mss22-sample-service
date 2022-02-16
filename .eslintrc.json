@@ -1,0 +1,74 @@
+{
+    "extends": "strongloop",
+    "parserOptions": {
+        "ecmaVersion": 2019
+    },
+    "env": {
+        "es6": true,
+        "mocha": true,
+        "node": true
+    },
+    "rules": {
+        "max-len": [
+            "error",
+            200,
+            {
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true
+            }
+        ],
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "space-before-function-paren": ["error", {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+        }],
+        "complexity": [
+            "error",
+            10
+        ],
+        "prefer-const": [
+            "error"
+        ],
+        "no-var": [
+            "error"
+        ],
+        "max-statements": [
+            "error",
+            50
+        ],
+        "max-lines-per-function": [
+            "error",
+            {
+                "max": 80,
+                "skipBlankLines": true
+            }
+        ]
+    },
+
+    "overrides": [
+        {
+          "files": ["*.test.js"],
+    
+          "rules": {
+            "max-statements": [
+                "error",
+                400
+            ],
+            "max-lines-per-function": [
+                "error",
+                {
+                    "max": 500,
+                    "skipBlankLines": true
+                }
+            ]
+          }
+        }
+      ]
+}
