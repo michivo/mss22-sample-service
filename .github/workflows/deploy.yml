@@ -40,5 +40,5 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
 
-      - name: Deploy to App Engine
-        run: gcloud app deploy --quiet
+      - id: 'deploy'
+        uses: 'google-github-actions/deploy-appengine@v0'
