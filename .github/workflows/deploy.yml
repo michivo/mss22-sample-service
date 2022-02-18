@@ -31,8 +31,7 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v0'
         with:
-          workload_identity_provider: 'projects/1023421741265/locations/global/workloadIdentityPools/mss22-github-actions-pool/providers/mss22-build-workload-provider'
-          service_account: 'mss22-service-account@mss-sample-service.iam.gserviceaccount.com'
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
