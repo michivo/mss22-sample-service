@@ -14,8 +14,10 @@ class ArticleDao {
     }
 }
 
-function add(article) {
-    return db.collection(articleCollection).add(article);
+async function add(article) {
+    const articleRef = await db.collection(articleCollection).add(article);
+    const snapshot = await articleRef.get();
+    return DaoContainer.create(snapshot, ArticleDao);
 }
 
 async function get() {
