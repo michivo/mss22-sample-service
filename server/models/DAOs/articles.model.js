@@ -20,14 +20,28 @@ async function add(article) {
     return DaoContainer.create(snapshot, ArticleDao);
 }
 
-async function get() {
+async function getAll() {
     const articleRef = await db.collection(articleCollection);
     const snapshot = await articleRef.get();
     return snapshot.docs.map(c => DaoContainer.create(c, ArticleDao));
 }
 
+async function getById(identifier) {
+    const articleRef = await db.collection(articleCollection)
+        .where('identifier', '==', identifier)
+        .limit(1);
+    const snapshot = await articleRef.get();
+    if (snapshot.docs.length > 0) {
+        return DaoContainer.create(snapshot.docs[0], ArticleDao);
+    } else {
+        return undefined;
+    }
+
+}
+
 module.exports = {
-    get,
+    getAll,
+    getById,
     add,
     ArticleDao,
 };
