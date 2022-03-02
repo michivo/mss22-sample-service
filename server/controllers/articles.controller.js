@@ -8,12 +8,24 @@ const add = async (req, res, _) => {
     res.status(200).send(articleDto(addedItem)).end();
 };
 
-const get = async (_, res, __) => {
-    const allArticles = await articleDao.get();
+const getAll = async (_, res, __) => {
+    const allArticles = await articleDao.getAll();
     res.status(200).send(allArticles.map(articleDto)).end();
+};
+
+const getById = async (req, res, __) => {
+    const identifier = req.params.articleIdentifier;
+    const article = await articleDao.getById(identifier);
+    if (!article) {
+        res.status(400).send(`Article with identifier ${identifier} could not be found.`);
+    } else {
+        console.log(article);
+        res.status(200).send(articleDto(article)).end();
+    }
 };
 
 module.exports = {
     add,
-    get,
+    getAll,
+    getById,
 };

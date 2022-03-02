@@ -57,8 +57,40 @@ const router = express.Router();
  *                 $ref: '#/definitions/ArticleV1'
  */
 router.get('/', (req, res) => {
-    return controller.get(req, res);
+    return controller.getAll(req, res);
 });
+
+/**
+ * @openapi
+ * /api/v1/articles/{articleIdentifier}:
+ *   get:
+ *     tags:
+ *       - Articles V1
+ *     produces:
+ *       - application/json
+  *     parameters:
+ *       - in: path
+ *         name: articleIdentifier
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Article identifier
+ *     description: Gets the article with the given identifier.
+ *     summary: Gets one article.
+ *     responses:
+ *       200:
+ *         description: The article with the given identifier.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/ArticleV1'
+ *       404:
+ *         description: The article was not found.
+ */
+router.get('/:articleIdentifier', (req, res) => {
+    return controller.getById(req, res);
+});
+
 
 /**
  * @openapi
