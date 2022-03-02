@@ -5,13 +5,35 @@ const sinon = require('sinon');
 const request = require('supertest');
 const controller = require(`${appRoot}/controllers/articles.controller`);
 
-describe('Comments route v1', () => {
+describe('Articles route v1', () => {
     const app = require('../../../../app');
 
     describe('GET /articles', () => {
         let getStub;
         before(() => {
-            getStub = sinon.stub(controller, 'get');
+            getStub = sinon.stub(controller, 'getAll');
+            getStub.callsFake((req, res) => {
+                res.status(200).send([{ identifier: 'Hello' }]);
+            });
+        });
+
+        after(() => {
+            getStub.restore();
+        });
+
+        it('should return data from controller', (done) => {
+            request(app)
+                .get('/api/v1/articles')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET /articles/{articleIdentifier}', () => {
+        let getStub;
+        before(() => {
+            getStub = sinon.stub(controller, 'getById');
             getStub.callsFake((req, res) => {
                 res.status(200).send({ article: 'Hello', userName: 'Michael' });
             });
@@ -23,7 +45,7 @@ describe('Comments route v1', () => {
 
         it('should return data from controller', (done) => {
             request(app)
-                .get('/api/v1/articles')
+                .get('/api/v1/articles/123456789')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200, done);
