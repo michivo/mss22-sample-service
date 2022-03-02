@@ -5,7 +5,7 @@ on:
     branches:
       - '**'
 
-name: Build and Test
+name: Lint and Test
 
 jobs:
   deploy:

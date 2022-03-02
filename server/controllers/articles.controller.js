@@ -19,7 +19,6 @@ const getById = async (req, res, __) => {
     if (!article) {
         res.status(400).send(`Article with identifier ${identifier} could not be found.`);
     } else {
-        console.log(article);
         res.status(200).send(articleDto(article)).end();
     }
 };
