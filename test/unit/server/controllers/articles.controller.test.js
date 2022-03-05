@@ -6,9 +6,9 @@ const controller = require('../../../../server/controllers/articles.controller')
 const db = require('../../../../server/dataAccess/firestore-access');
 
 describe('Articles Controller', () => {
-    let addStub;
-    describe('add articles', () => {
-        it('should add a new article to the model', async () => {
+    let collectionStub;
+    describe('add', () => {
+        it('adds a new article to the model', async () => {
             const responseData = {
                 identifier: '123',
                 identifierType: 'custom',
@@ -17,8 +17,8 @@ describe('Articles Controller', () => {
             };
 
             let addedData = {};
-            addStub = sinon.stub(db, 'collection');
-            addStub.withArgs('articles').returns({
+            collectionStub = sinon.stub(db, 'collection');
+            collectionStub.withArgs('articles').returns({
                 add: data => {
                     addedData = data;
                     return Promise.resolve(
@@ -47,8 +47,9 @@ describe('Articles Controller', () => {
         });
     });
 
-    describe('get single article', () => {
-        it('should get a single article from the model', async () => {
+    describe('getById', () => {
+        it('gets a single article from the model', async () => {
+            // arrange
             const responseData = {
                 identifier: '123',
                 identifierType: 'custom',
@@ -56,7 +57,7 @@ describe('Articles Controller', () => {
                 description: 'foobar',
             };
 
-            addStub = sinon.stub(db, 'collection');
+            collectionStub = sinon.stub(db, 'collection');
             const collection = {
                 limit: (number) => {
                     expect(number).to.equal(1);
@@ -64,7 +65,7 @@ describe('Articles Controller', () => {
                 },
                 get: () => ({ docs: [{ id: '123', data: () => responseData }] }),
             };
-            addStub.withArgs('articles').returns({
+            collectionStub.withArgs('articles').returns({
                 where: (paramName, operator, value) => {
                     expect(paramName).to.equal('identifier');
                     expect(operator).to.equal('==');
@@ -79,7 +80,49 @@ describe('Articles Controller', () => {
             res.end = sinon.stub().returns(res);
             const req = { params: { articleIdentifier: '1234567890128' } };
 
+            // act
             await controller.getById(req, res);
+
+            // assert
+            sinon.assert.calledWith(res.status, 200);
+            sinon.assert.calledWith(res.send, responseData);
+            sinon.assert.calledOnce(res.end);
+        });
+    });
+
+    describe('getAll', () => {
+        it('should get all articles from the model', async () => {
+            // arrange
+            const responseData = [{
+                identifier: '12345',
+                identifierType: 'custom',
+                name: 'hugo',
+                description: 'foobar',
+            },
+            {
+                identifier: '54321',
+                identifierType: 'custom',
+                name: 'hansi',
+                description: 'foobar',
+            }];
+
+            collectionStub = sinon.stub(db, 'collection');
+            const collection = {
+                get: () => ({
+                    docs: [
+                        { id: '123', data: () => responseData[0] },
+                        { id: '234', data: () => responseData[1] },
+                    ],
+                }),
+            };
+            collectionStub.withArgs('articles').returns(collection);
+
+            const res = {};
+            res.status = sinon.stub().returns(res);
+            res.send = sinon.stub().returns(res);
+            res.end = sinon.stub().returns(res);
+
+            await controller.getAll({}, res);
 
             sinon.assert.calledWith(res.status, 200);
             sinon.assert.calledWith(res.send, responseData);
@@ -88,6 +131,6 @@ describe('Articles Controller', () => {
     });
 
     afterEach(() => {
-        if (addStub) addStub.restore();
+        if (collectionStub) collectionStub.restore();
     });
 });

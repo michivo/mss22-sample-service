@@ -13,7 +13,7 @@ const getAll = async (_, res, __) => {
     res.status(200).send(allArticles.map(articleDto)).end();
 };
 
-const getById = async (req, res, __) => {
+const getById = async (req, res, _) => {
     const identifier = req.params.articleIdentifier;
     const article = await articleDao.getById(identifier);
     if (!article) {
