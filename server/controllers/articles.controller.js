@@ -17,7 +17,7 @@ const getById = async (req, res, _) => {
     const identifier = req.params.articleIdentifier;
     const article = await articleDao.getById(identifier);
     if (!article) {
-        res.status(400).send(`Article with identifier ${identifier} could not be found.`);
+        res.status(404).send(`Article with identifier ${identifier} could not be found.`);
     } else {
         res.status(200).send(articleDto(article)).end();
     }
